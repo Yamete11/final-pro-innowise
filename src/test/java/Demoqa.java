@@ -1,85 +1,102 @@
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.innowise.demoqa.LoginPage;
+import org.innowise.demoqa.ProfilePage;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
+
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//DONE
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Demoqa {
 
-    private final String baseUrl = "https://demoqa.com/";
-    private String userId;
-    private String token;
-    private final String bookId = "9781449325862";
-    private String username = "1d2tcS1estsSa12345!";
-    private String password = "TestPassword123!";
+    private static final String BASE_URL = "https://demoqa.com/";
+    private static String userId;
+    private static String token;
+    private static String username;
+    private static String password;
+    private static final String BOOK_ID = "9781449331818";
+    private static  String bookTitle;
 
-    @Test
-    @Order(1)
-    public void registerUser() {
-        String requestBody = "{"
-                + "\"userName\": \"" + username + "\","
-                + "\"password\": \"" + password + "\""
-                + "}";
+    @BeforeAll
+    public static void setup() {
+        username = "user_" + UUID.randomUUID().toString().substring(0, 8);
+        password = "TestPassword123!";
 
-        Response response = given()
-                .baseUri(baseUrl)
+        String requestBody = String.format(
+                "{\"userName\": \"%s\", \"password\": \"%s\"}", username, password);
+
+        Response registrationResponse = given()
+                .baseUri(BASE_URL)
                 .basePath("Account/v1/User")
                 .header("Content-Type", "application/json")
                 .body(requestBody)
                 .post();
 
-        response.then().statusCode(201);
+        registrationResponse.then().statusCode(201);
+        userId = registrationResponse.jsonPath().getString("userID");
 
-        userId = response.jsonPath().getString("userID");
-        System.out.println("User ID in registerUser: " + userId);
-    }
-
-    @Test
-    @Order(2)
-    public void loginUser() {
-        System.out.println("User ID in loginUser: " + userId);
-        String requestBody = "{"
-                + "\"userName\": \"" + username + "\","
-                + "\"password\": \"" + password + "\""
-                + "}";
-
-        Response response = given()
-                .baseUri(baseUrl)
+        Response loginResponse = given()
+                .baseUri(BASE_URL)
                 .basePath("Account/v1/GenerateToken")
                 .header("Content-Type", "application/json")
                 .body(requestBody)
                 .post();
 
-        response.then().statusCode(200);
-        token = response.jsonPath().getString("token");
-        System.out.println("User TOKEN: " + token);
+        loginResponse.then().statusCode(200);
+        token = loginResponse.jsonPath().getString("token");
     }
 
-    /*@Test
-    @Order(3)*/
+    @Test
+    @Order(1)
     public void addBookToProfile() {
-        String requestBody = "{"
-                + "\"userId\": \"" + userId + "\","
-                + "\"collectionOfIsbns\": [{\"isbn\": \"" + bookId + "\"}]"
-                + "}";
+        String requestBody = String.format("{\"userId\": \"%s\", \"collectionOfIsbns\": [{\"isbn\": \"%s\"}]}", userId, BOOK_ID);
 
-        Response response = given()
-                .baseUri(baseUrl)
+        Response addBookResponse = given()
+                .baseUri(BASE_URL)
                 .basePath("BookStore/v1/Books")
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "application/json")
                 .body(requestBody)
                 .post();
 
-        response.then().statusCode(201);
-        String message = response.jsonPath().getString("message");
-        System.out.println("Book added: " + message);
+        addBookResponse.then().statusCode(201);
 
-        assertTrue(message.contains("Book added"), "Book was not added successfully");
+        Response getUserResponse = given()
+                .baseUri(BASE_URL)
+                .basePath("Account/v1/User/" + userId)
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .get();
+
+        getUserResponse.then().statusCode(200);
+
+        String books = getUserResponse.jsonPath().getString("books");
+        bookTitle = getUserResponse.jsonPath().getString("books[0].title");;
+        System.out.println("Books in profile: " + books);
+        assertTrue(books.contains(BOOK_ID), "Книга не найдена в профиле пользователя");
+    }
+
+    @Test
+    @Order(2)
+    public void checkUI(){
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://demoqa.com/login");
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(username, password);
+
+        ProfilePage profilePage = new ProfilePage(driver);
+
+        assertEquals(profilePage.getBook(), bookTitle, "");
+
+        driver.quit();
     }
 }
