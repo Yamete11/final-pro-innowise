@@ -20,6 +20,12 @@ public class GroupPage {
     @FindBy(xpath = "//span[@class='MenuItem__text' and text()='Фильтры']")
     private WebElement filterButton;
 
+    @FindBy(xpath = "//button[@class=\"Button Button--huge Button--primary Button--flat\"]")
+    private WebElement showButton;
+
+    @FindBy(xpath = "//div[@class=\"CatalogNav__title\"]//span")
+    private WebElement filterResultQuantity;
+
     public GroupPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -82,6 +88,16 @@ public class GroupPage {
 
         Actions actions = new Actions(driver);
         actions.moveToElement(optionElement).click().perform();
+    }
+
+    public void clickShowButton() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(showButton));
+        showButton.click();
+    }
+
+    public boolean checkResultQuantity() {
+        return Integer.parseInt(filterResultQuantity.getText()) > 0;
     }
 
 

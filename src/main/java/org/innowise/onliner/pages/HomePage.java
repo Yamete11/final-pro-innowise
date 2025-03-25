@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -42,9 +43,11 @@ public class HomePage {
     }
 
     public void switchToSearchFrame() {
-        WebElement iframe = driver.findElement(iframeLocator);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement iframe = wait.until(ExpectedConditions.visibilityOfElementLocated(iframeLocator));
         driver.switchTo().frame(iframe);
     }
+
 
     public void switchToDefaultContent() {
         driver.switchTo().defaultContent();
@@ -62,7 +65,4 @@ public class HomePage {
         return text;
     }
 
-    public String getFirstProduct() {
-        return firstProduct.getText().trim();
-    }
 }

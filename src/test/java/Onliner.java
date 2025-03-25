@@ -12,13 +12,17 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//DONE
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Onliner {
 
     private static WebDriver driver;
     protected static final Logger logger = LoggerFactory.getLogger(Onliner.class);
+    String product = "Телефон Apple iPhone 16e 128GB (белый)";
 
-    @BeforeEach
-    public void setup() {
+
+    @BeforeAll
+    public static void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.onliner.by/");
@@ -26,13 +30,15 @@ public class Onliner {
 
 
     @Test
+    @Order(1)
     public void searchProducts() throws InterruptedException {
-        String product = "Телефон Samsung Galaxy A52 SM-A525F/DS 4GB/128GB (черный)";
-
         HomePage homePage = new HomePage(driver);
         homePage.searchProduct(product);
+
         homePage.switchToSearchFrame();
+
         homePage.clickOnProductItem();
+
         homePage.switchToDefaultContent();
 
         ProductPage productPage = new ProductPage(driver);
@@ -41,19 +47,21 @@ public class Onliner {
 
 
     @Test
+    @Order(2)
     public void addingProducts() throws InterruptedException {
-        HomePage homePage = new HomePage(driver);
-
-        homePage.acceptCookies();
-
-        String text = homePage.openFirstProduct();
-
         ProductPage productPage = new ProductPage(driver);
 
-        assertEquals(text, productPage.getProductTitle(), "Titles do not match");
+        assertEquals(product, productPage.getProductTitle(), "Titles do not match");
         assertTrue(productPage.getProductSpecs().isDisplayed(), "Product specs is not displayed");
 
         productPage.clickFirstShopButton();
+
+    }
+
+    @Test
+    @Order(3)
+    public void addedProductIsDisplayed(){
+        ProductPage productPage = new ProductPage(driver);
 
         productPage.clickGoToCart();
 
@@ -63,20 +71,10 @@ public class Onliner {
 
     }
 
+
     @Test
+    @Order(4)
     public void removingProductFromCart() throws InterruptedException {
-        HomePage homePage = new HomePage(driver);
-
-        homePage.acceptCookies();
-
-        String text = homePage.openFirstProduct();
-
-        ProductPage productPage = new ProductPage(driver);
-
-        productPage.clickFirstShopButton();
-
-        productPage.clickGoToCart();
-
         CartPage cartPage = new CartPage(driver);
 
         cartPage.removeFromCart();
@@ -84,8 +82,8 @@ public class Onliner {
         assertTrue(cartPage.getRemoveFromCartConfirmation().isDisplayed(), "Product title is not displayed");
     }
 
-    @AfterEach
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         if (driver != null) {
             driver.quit();
         }

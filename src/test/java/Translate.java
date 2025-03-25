@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
+//DONE
 public class Translate {
 
     private static WebDriver driver;

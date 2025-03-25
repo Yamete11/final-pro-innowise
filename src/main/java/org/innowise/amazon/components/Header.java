@@ -16,7 +16,7 @@ public class Header {
 
     private WebDriver driver;
 
-    @FindBy(id = "nav-cart")
+    @FindBy(id = "nav-cart-count-container")
     private WebElement cart;
 
     @FindBy(xpath = "//div[@id='nav-flyout-ya-signin']//span[@class=\"nav-action-inner\"]")

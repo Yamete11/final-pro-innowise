@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//DONE
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Amazon {
 
     private static WebDriver driver;
@@ -24,6 +26,7 @@ public class Amazon {
     }
 
     @Test
+    @Order(1)
     public void successfulAuthorization(){
         HomePage homePage = new HomePage(driver);
 
@@ -39,20 +42,23 @@ public class Amazon {
 
     @ParameterizedTest
     @CsvSource({
-            "iPhone",
+            "Apple iPhone 12 Mini, 64GB, Green - Unlocked (Renewed)",
     })
-    public void searchProducts(String text) throws InterruptedException {
+    @Order(2)
+    public void searchProducts(String text){
         HomePage homePage = new HomePage(driver);
         homePage.getHeader().searchProducts(text);
 
         SearchPage searchPage = new SearchPage(driver);
 
         assertTrue(searchPage.checkResult(text), "Search results doesn't match");
+
+        searchPage.clickFirstProductLink();
     }
 
-    //@Test
-    public void addProductFromProductPage() throws InterruptedException {
-        driver.get("https://www.amazon.com/Sony-WH-1000XM5-Canceling-Headphones-Hands-Free/dp/B09XS7JWHH/ref=sr_1_1_sspa?crid=24X9AV694AHGR&dib=eyJ2IjoiMSJ9.g6hnCk773OnoMpovWDr9eW2rMwb-hftXo_Y3i17329GJz8QwhBtUddE8K1hYPdd6udvGivcZDn1QIEJPzdkXeyHle46WEAMKvQUp5WR5C_jFbVDXguTmONF3mh4vk9VWSb6Ri5w5pyUx5qw45A_Nn0Qpybnrk03G7pvHhMa6G4MrXalhvgjNWMxs3M5EW-_Vy8grEy_fi7oe3BZWMj9ElZo-s_ZIpT3pWDyDXOOurBA.HSzeS7SkOfZkt6eRpRG79fmgteYj7qT0B9Ap3jzAdKY&dib_tag=se&keywords=Sony&qid=1742749858&sprefix=sony%2Caps%2C190&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1");
+    @Test
+    @Order(3)
+    public void addProductFromProductPage(){
         ProductPage productPage = new ProductPage(driver);
         productPage.clickOnAddProductButton();
 
@@ -62,9 +68,14 @@ public class Amazon {
         assertTrue(cartPage.checkTheNumberOfProduct(), "There are no cart products");
     }
 
-    //@Test
+    @Test
+    @Order(4)
     public void addedProductIsDisplayed(){
+        CartPage cartPage = new CartPage(driver);
+        cartPage.getHeader().clickCart();
 
+        ShoppingCart shoppingCart = new ShoppingCart(driver);
+        assertTrue(shoppingCart.getProductTitle().isDisplayed(), "Cart is not displayed");
     }
 
     @AfterAll

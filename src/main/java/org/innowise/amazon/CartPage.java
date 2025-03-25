@@ -1,5 +1,6 @@
 package org.innowise.amazon;
 
+import org.innowise.amazon.components.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,15 +15,18 @@ public class CartPage {
 
     private WebDriver driver;
 
+    private Header header;
+
     @FindBy(id = "NATC_SMART_WAGON_CONF_MSG_SUCCESS")
     private WebElement alert;
 
-    @FindBy(xpath = "//span[@data-feature-id=\"sc-update-quantity-select\"]//span[@class=\"a-dropdown-prompt\"]")
-    private WebElement numberOfProduct;
+    @FindBy(xpath = "//span[@class=\"sc-quantity-stepper\"]//span[@data-a-selector=\"value\"]")
+    private WebElement quantityOfProduct;
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        this.header = new Header(driver);
     }
 
     public WebElement getAlert() {
@@ -31,7 +35,11 @@ public class CartPage {
 
     public boolean checkTheNumberOfProduct() {
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(numberOfProduct));
-        return Integer.parseInt(numberOfProduct.getText()) > 0;
+        wait.until(ExpectedConditions.visibilityOf(quantityOfProduct));
+        return Integer.parseInt(quantityOfProduct.getText()) > 0;
+    }
+
+    public Header getHeader() {
+        return header;
     }
 }

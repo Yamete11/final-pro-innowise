@@ -12,6 +12,9 @@ public class SearchPage {
     @FindBy(xpath = "(//div[@class=\"a-section\"]//h2//span)[1]")
     private WebElement searchResult;
 
+    @FindBy(xpath = "(//div[@class=\"puisg-col-inner\"]//a)[1]")
+    private WebElement firstProductLink;
+
 
     public SearchPage(WebDriver driver) {
         this.driver = driver;
@@ -20,5 +23,9 @@ public class SearchPage {
 
     public boolean checkResult(String text) {
         return searchResult.getText().contains(text);
+    }
+
+    public void clickFirstProductLink() {
+        firstProductLink.click();
     }
 }

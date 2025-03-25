@@ -12,10 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//DONE
 public class Relax {
 
     private static WebDriver driver;
-    protected static final Logger logger = LoggerFactory.getLogger(Amazon.class);
+    protected static final Logger logger = LoggerFactory.getLogger(Relax.class);
 
     @BeforeEach
     public void setup() {
@@ -56,17 +57,20 @@ public class Relax {
         groupPage.openTypeOfFilterOption("Заводской");
         groupPage.chooseRadioBox("Еда навынос");
         groupPage.chooseFilter("Кухня", "Белорусская");
-        groupPage.selectOptionFromMenu("Меню на вынос", "Да");
+        groupPage.selectOptionFromMenu("Меню навынос", "Да");
 
+
+        groupPage.clickShowButton();
+        assertTrue(groupPage.checkResultQuantity(), "Result quantity is not displayed");
     }
 
     @ParameterizedTest
     @CsvSource({
-            "Кино, false",
-            "Спектакли, true",
-            "События, false"
+            "Кино",
+            "Спектакли",
+            "События"
     })
-    public void posterValidation(String section, boolean expected) {
+    public void posterValidation(String section) {
         HomePage homePage = new HomePage(driver);
 
         homePage.acceptCookies();
