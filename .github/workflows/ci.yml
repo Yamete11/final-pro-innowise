@@ -10,6 +10,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      selenium:
+        image: selenium/standalone-chrome:latest
+        options: --shm-size 2g
+        ports:
+          - 4444:4444
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,11 +27,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Playwright Browsers
+        run: npm install playwright
+
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
-      - name: Run tests
-        run: ./gradlew clean test
+      - name: Run tests with debug logging
+        run: DEBUG=pw:api ./gradlew clean test
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
