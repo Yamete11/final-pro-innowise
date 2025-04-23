@@ -1,4 +1,4 @@
-package org.innowise.onliner.pages;
+package org.innowise.ui.onliner;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,7 +30,7 @@ public class ProductPage {
         PageFactory.initElements(driver, this);
     }
 
-    public String getProductTitle() throws InterruptedException {
+    public String getProductTitle(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOf(productTitle));
         return productTitle.getText().trim();
@@ -40,15 +40,6 @@ public class ProductPage {
         return productSpecs;
     }
 
-    public WebElement getGoToCart() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(goToCart));
-        return goToCart;
-    }
-
-    public WebElement getFirstShopButton() {
-        return firstShopButton;
-    }
 
     public void clickFirstShopButton() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));

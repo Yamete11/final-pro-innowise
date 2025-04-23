@@ -1,10 +1,10 @@
 import io.restassured.response.Response;
-import org.innowise.demoqa.LoginPage;
-import org.innowise.demoqa.ProfilePage;
+import org.innowise.config.URLsEnum;
+import org.innowise.ui.demoqa.LoginPage;
+import org.innowise.ui.demoqa.ProfilePage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
 
 import java.util.UUID;
 
@@ -12,17 +12,17 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//DONE
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Demoqa {
+    private static WebDriver driver;
 
-    private static final String BASE_URL = "https://demoqa.com/";
     private static String userId;
     private static String token;
     private static String username;
     private static String password;
     private static final String BOOK_ID = "9781449331818";
     private static  String bookTitle;
+
 
     @BeforeAll
     public static void setup() {
@@ -33,7 +33,7 @@ public class Demoqa {
                 "{\"userName\": \"%s\", \"password\": \"%s\"}", username, password);
 
         Response registrationResponse = given()
-                .baseUri(BASE_URL)
+                .baseUri(URLsEnum.DEMOQA_URL.getUrl())
                 .basePath("Account/v1/User")
                 .header("Content-Type", "application/json")
                 .body(requestBody)
@@ -43,7 +43,7 @@ public class Demoqa {
         userId = registrationResponse.jsonPath().getString("userID");
 
         Response loginResponse = given()
-                .baseUri(BASE_URL)
+                .baseUri(URLsEnum.DEMOQA_URL.getUrl())
                 .basePath("Account/v1/GenerateToken")
                 .header("Content-Type", "application/json")
                 .body(requestBody)
@@ -59,7 +59,7 @@ public class Demoqa {
         String requestBody = String.format("{\"userId\": \"%s\", \"collectionOfIsbns\": [{\"isbn\": \"%s\"}]}", userId, BOOK_ID);
 
         Response addBookResponse = given()
-                .baseUri(BASE_URL)
+                .baseUri(URLsEnum.DEMOQA_URL.getUrl())
                 .basePath("BookStore/v1/Books")
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "application/json")
@@ -69,7 +69,7 @@ public class Demoqa {
         addBookResponse.then().statusCode(201);
 
         Response getUserResponse = given()
-                .baseUri(BASE_URL)
+                .baseUri(URLsEnum.DEMOQA_URL.getUrl())
                 .basePath("Account/v1/User/" + userId)
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "application/json")
@@ -78,25 +78,27 @@ public class Demoqa {
         getUserResponse.then().statusCode(200);
 
         String books = getUserResponse.jsonPath().getString("books");
-        bookTitle = getUserResponse.jsonPath().getString("books[0].title");;
-        System.out.println("Books in profile: " + books);
+        bookTitle = getUserResponse.jsonPath().getString("books[0].title");
         assertTrue(books.contains(BOOK_ID), "Книга не найдена в профиле пользователя");
     }
 
     @Test
     @Order(2)
     public void checkUI(){
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://demoqa.com/login");
+        driver.get(URLsEnum.DEMOQA_URL.getUrl() + "login");
 
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login(username, password);
 
         ProfilePage profilePage = new ProfilePage(driver);
 
-        assertEquals(profilePage.getBook(), bookTitle, "");
+        assertEquals(profilePage.getBook(), bookTitle, "Book is not displayed correctly");
+    }
 
+    @AfterAll
+    public static void tearDown() {
         driver.quit();
     }
 }

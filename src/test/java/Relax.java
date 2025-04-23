@@ -1,8 +1,6 @@
-import org.innowise.relax.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.innowise.config.URLsEnum;
+import org.innowise.ui.relax.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//DONE
 public class Relax {
 
     private static WebDriver driver;
@@ -22,20 +19,24 @@ public class Relax {
     public void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://www.relax.by/");
+        driver.get(URLsEnum.RELAX_URL.getUrl());
     }
 
-    @Test
-    public void searchValidation(){
+    @ParameterizedTest
+    @CsvSource({
+            "Luna"
+    })
+    @Order(1)
+    public void searchValidation(String inputText){
         HomePage homePage = new HomePage(driver);
 
         homePage.acceptCookies();
-        homePage.inputSearch("Luna");
+        homePage.inputSearch(inputText);
         homePage.openSearchResult();
 
         PlacePage placePage = new PlacePage(driver);
 
-        //placePage.closeAd();
+        placePage.closeAd();
         placePage.clickPlaceData();
 
         assertTrue(placePage.getAddress().isDisplayed(), "Address is not displayed");
@@ -43,21 +44,25 @@ public class Relax {
         assertTrue(placePage.getWorkingHours().isDisplayed(), "Working hours is not displayed");
     }
 
-    @Test
-    public void filtersValidation() throws InterruptedException {
+    @ParameterizedTest
+    @CsvSource({
+            "Еда, Рестораны, Район, Заводской, Еда навынос, Кухня, Белорусская, Меню навынос, Да"
+    })
+    @Order(2)
+    public void filtersValidation(String type, String group, String typeOfFilter, String typeOfFilterOption, String radioBox, String filterGroup, String filterOption, String menuTitle, String menuOption){
         HomePage homePage = new HomePage(driver);
 
         homePage.acceptCookies();
-        homePage.openType("Еда");
-        homePage.openGroup("Рестораны");
+        homePage.openType(type);
+        homePage.openGroup(group);
 
         GroupPage groupPage = new GroupPage(driver);
         groupPage.clickFilterButton();
-        groupPage.openTypeOfFilter("Район");
-        groupPage.openTypeOfFilterOption("Заводской");
-        groupPage.chooseRadioBox("Еда навынос");
-        groupPage.chooseFilter("Кухня", "Белорусская");
-        groupPage.selectOptionFromMenu("Меню навынос", "Да");
+        groupPage.openTypeOfFilter(typeOfFilter);
+        groupPage.openTypeOfFilterOption(typeOfFilterOption);
+        groupPage.chooseRadioBox(radioBox);
+        groupPage.chooseFilter(filterGroup, filterOption);
+        groupPage.selectOptionFromMenu(menuTitle, menuOption);
 
 
         groupPage.clickShowButton();
@@ -66,15 +71,16 @@ public class Relax {
 
     @ParameterizedTest
     @CsvSource({
-            "Кино",
-            "Спектакли",
-            "События"
+            "Кино, 'Афиша, кино'",
+            "Спектакли, 'Афиша, кино'",
+            "События, 'Афиша, кино'"
     })
-    public void posterValidation(String section) {
+    @Order(3)
+    public void posterValidation(String section, String type) {
         HomePage homePage = new HomePage(driver);
 
         homePage.acceptCookies();
-        homePage.openType("Афиша, кино");
+        homePage.openType(type);
 
         AfishaPage afishaPage = new AfishaPage(driver);
 
@@ -84,12 +90,10 @@ public class Relax {
 
         assertEquals(section.toLowerCase(), afishaItemPage.getItemSection(), "Sections doesn't match");
         assertTrue(afishaItemPage.getFeedbackSection().isDisplayed(), "Feedback section is not displayed");
-
     }
 
 
-
-    @BeforeEach
+    @AfterEach
     public void tearDown() {
         if (driver != null) {
             driver.quit();

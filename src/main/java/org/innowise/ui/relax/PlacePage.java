@@ -1,4 +1,4 @@
-package org.innowise.relax;
+package org.innowise.ui.relax;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -24,7 +24,7 @@ public class PlacePage {
     @FindBy(xpath = "//span[@class=\"PhoneLink__number\"]")
     private WebElement phoneNumber;
 
-    @FindBy(xpath = "//div[@class=\"h17f477bf\"]")
+    @FindBy(xpath = "//div[@class=\"k5bd2ded4\"]")
     private WebElement adCloseButton;
 
     public PlacePage(WebDriver driver) {

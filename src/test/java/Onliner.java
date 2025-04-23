@@ -1,39 +1,37 @@
-import org.innowise.onliner.pages.CartPage;
-import org.innowise.onliner.pages.HomePage;
-import org.innowise.onliner.pages.ProductPage;
+import org.innowise.config.URLsEnum;
+import org.innowise.ui.onliner.CartPage;
+import org.innowise.ui.onliner.HomePage;
+import org.innowise.ui.onliner.ProductPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//DONE
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class Onliner {
 
     private static WebDriver driver;
     protected static final Logger logger = LoggerFactory.getLogger(Onliner.class);
-    String product = "Телефон Apple iPhone 16e 128GB (белый)";
+    private static final String PRODUCT_NAME = "Телефон Apple iPhone 16e 128GB (белый)";
 
 
     @BeforeAll
     public static void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://www.onliner.by/");
+        driver.get(URLsEnum.ONLINER_URL.getUrl());
     }
 
 
     @Test
     @Order(1)
-    public void searchProducts() throws InterruptedException {
+    public void searchProducts(){
         HomePage homePage = new HomePage(driver);
-        homePage.searchProduct(product);
+        homePage.searchProduct(PRODUCT_NAME);
 
         homePage.switchToSearchFrame();
 
@@ -42,20 +40,19 @@ public class Onliner {
         homePage.switchToDefaultContent();
 
         ProductPage productPage = new ProductPage(driver);
-        assertEquals(product, productPage.getProductTitle(), "Titles do not match");
+        assertEquals(PRODUCT_NAME, productPage.getProductTitle(), "Titles do not match");
     }
 
 
     @Test
     @Order(2)
-    public void addingProducts() throws InterruptedException {
+    public void addingProducts(){
         ProductPage productPage = new ProductPage(driver);
 
-        assertEquals(product, productPage.getProductTitle(), "Titles do not match");
+        assertEquals(PRODUCT_NAME, productPage.getProductTitle(), "Titles do not match");
         assertTrue(productPage.getProductSpecs().isDisplayed(), "Product specs is not displayed");
 
         productPage.clickFirstShopButton();
-
     }
 
     @Test
@@ -74,7 +71,7 @@ public class Onliner {
 
     @Test
     @Order(4)
-    public void removingProductFromCart() throws InterruptedException {
+    public void removingProductFromCart(){
         CartPage cartPage = new CartPage(driver);
 
         cartPage.removeFromCart();

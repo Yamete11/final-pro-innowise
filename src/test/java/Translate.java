@@ -1,4 +1,5 @@
-import org.innowise.translate.HomePage;
+import org.innowise.config.URLsEnum;
+import org.innowise.ui.translate.HomePage;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-//DONE
 public class Translate {
 
     private static WebDriver driver;
@@ -22,7 +22,7 @@ public class Translate {
     public void setupHomePage() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://translate.google.com/");
+        driver.get(URLsEnum.TRANSLATE_URL.getUrl());
         homePage = new HomePage(driver);
         homePage.clickAcceptAll();
     }
@@ -34,7 +34,7 @@ public class Translate {
             "French, Spanish, Bonjour, Buen día",
             "German, Italian, Guten Tag, Buona giornata"
     })
-    public void uiValidation(String firstLanguage, String secondLanguage, String text, String resultText) throws InterruptedException {
+    public void uiValidation(String firstLanguage, String secondLanguage, String text, String resultText)  {
 
         homePage.clickExpandLeftButton();
         homePage.switchLeftLanguage(firstLanguage);

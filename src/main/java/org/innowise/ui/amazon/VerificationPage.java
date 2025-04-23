@@ -1,4 +1,4 @@
-package org.innowise.amazon;
+package org.innowise.ui.amazon;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

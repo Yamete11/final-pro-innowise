@@ -1,6 +1,6 @@
-package org.innowise.amazon;
+package org.innowise.ui.amazon;
 
-import org.innowise.amazon.components.Header;
+import org.innowise.ui.amazon.components.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

@@ -1,4 +1,4 @@
-package org.innowise.demoqa;
+package org.innowise.ui.demoqa;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

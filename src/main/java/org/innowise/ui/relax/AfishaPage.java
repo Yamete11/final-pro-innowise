@@ -1,4 +1,4 @@
-package org.innowise.relax;
+package org.innowise.ui.relax;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,8 +12,7 @@ import java.time.Duration;
 
 public class AfishaPage {
 
-    private WebDriver driver;
-
+    private final WebDriver driver;
 
     public AfishaPage(WebDriver driver) {
         this.driver = driver;

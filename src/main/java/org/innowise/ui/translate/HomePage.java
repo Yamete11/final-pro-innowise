@@ -1,4 +1,4 @@
-package org.innowise.translate;
+package org.innowise.ui.translate;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;

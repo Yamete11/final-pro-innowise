@@ -1,4 +1,4 @@
-package org.innowise.relax;
+package org.innowise.ui.relax;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

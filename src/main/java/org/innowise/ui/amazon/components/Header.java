@@ -1,4 +1,4 @@
-package org.innowise.amazon.components;
+package org.innowise.ui.amazon.components;
 
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;

@@ -1,4 +1,4 @@
-package org.innowise.onliner.pages;
+package org.innowise.ui.onliner;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

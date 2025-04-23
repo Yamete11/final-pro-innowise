@@ -1,4 +1,4 @@
-package org.innowise.onliner.pages;
+package org.innowise.ui.onliner;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,17 +14,11 @@ import java.time.Duration;
 public class HomePage {
     private WebDriver driver;
 
-    @FindBy(xpath = "(//a[@class='catalog-offers__link catalog-offers__link_primary'])[1]")
-    private WebElement firstProduct;
-
     @FindBy(xpath = "//input[contains(@class, 'fast-search__input')]")
     private WebElement searchInput;
 
     @FindBy(xpath = "//div[@class='result__item result__item_product']")
     private WebElement productItem;
-
-    @FindBy(id = "submit-button")
-    private WebElement cookieSubmitButton;
 
     private final By iframeLocator = By.xpath("//div[@id='fast-search-modal']//iframe[@class='modal-iframe']");
 
@@ -37,10 +31,6 @@ public class HomePage {
         searchInput.sendKeys(product);
     }
 
-    public void acceptCookies() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.elementToBeClickable(cookieSubmitButton)).click();
-    }
 
     public void switchToSearchFrame() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -56,13 +46,6 @@ public class HomePage {
     public void clickOnProductItem() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(productItem)).click();
-    }
-
-    public String openFirstProduct() throws InterruptedException {
-        Thread.sleep(2000);
-        String text = firstProduct.getText().trim();
-        firstProduct.click();
-        return text;
     }
 
 }
