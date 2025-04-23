@@ -5,6 +5,7 @@ import org.innowise.ui.onliner.ProductPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,11 @@ public class Onliner {
 
     @BeforeAll
     public static void setup() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get(URLsEnum.ONLINER_URL.getUrl());
     }

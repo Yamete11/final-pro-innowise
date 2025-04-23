@@ -5,6 +5,7 @@ import org.innowise.ui.demoqa.ProfilePage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.UUID;
 
@@ -85,7 +86,11 @@ public class Demoqa {
     @Test
     @Order(2)
     public void checkUI(){
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get(URLsEnum.DEMOQA_URL.getUrl() + "login");
 
