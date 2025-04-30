@@ -24,7 +24,7 @@ public class PlacePage {
     @FindBy(xpath = "//span[@class=\"PhoneLink__number\"]")
     private WebElement phoneNumber;
 
-    @FindBy(xpath = "//div[@class=\"k5bd2ded4\"]")
+    @FindBy(xpath = "//div[@class=\"y4ed87daf\" or @class=\"oeaac79e3\"]")
     private WebElement adCloseButton;
 
     public PlacePage(WebDriver driver) {

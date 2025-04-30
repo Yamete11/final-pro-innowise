@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,12 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AmazonTest {
 
-    /*private static WebDriver driver;
+    private static WebDriver driver;
     protected static final Logger logger = LoggerFactory.getLogger(AmazonTest.class);
 
     @BeforeAll
     public static void setup() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get(URLsEnum.AMAZON_URL.getUrl());
         VerificationPage verificationPage = new VerificationPage(driver);
@@ -30,7 +35,7 @@ public class AmazonTest {
             "gleb.ivanov107@gmail.com, Qwerty!1, Hello, Glebchik",
     })
     @Order(1)
-    public void successfulAuthorization(String email, String password, String expectedText) throws InterruptedException {
+    public void successfulAuthorization(String email, String password, String expectedText){
         HomePage homePage = new HomePage(driver);
         homePage.getHeader().hoverOverAccountAndListButton();
         SignInPage signInPage = new SignInPage(driver);
@@ -40,7 +45,7 @@ public class AmazonTest {
 
     @ParameterizedTest
     @CsvSource({
-            "apple iphone 12 mini 64gb green - unlocked renewed",
+            "Logitech G502 HERO High Performance Wired Gaming Mouse",
     })
     @Order(2)
     public void searchProducts(String text) {
@@ -53,9 +58,8 @@ public class AmazonTest {
 
     @Test
     @Order(3)
-    public void addProductFromProductPage() throws InterruptedException {
+    public void addProductFromProductPage(){
         ProductPage productPage = new ProductPage(driver);
-        Thread.sleep(5000);
         productPage.clickOnAddProductButton();
         CartPage cartPage = new CartPage(driver);
         assertTrue(cartPage.getAlert().isDisplayed(), "Cart is not displayed");
@@ -76,5 +80,5 @@ public class AmazonTest {
         if (driver != null) {
             driver.quit();
         }
-    }*/
+    }
 }
