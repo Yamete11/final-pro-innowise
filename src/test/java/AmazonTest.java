@@ -19,11 +19,11 @@ public class AmazonTest {
 
     @BeforeAll
     public static void setup() {
-        ChromeOptions options = new ChromeOptions();
+        /*ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        driver = new ChromeDriver(options);
+        options.addArguments("--disable-dev-shm-usage");*/
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(URLsEnum.AMAZON_URL.getUrl());
         VerificationPage verificationPage = new VerificationPage(driver);
