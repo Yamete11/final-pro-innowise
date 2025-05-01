@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         jdk 'JDK 17'
-        git 'Git'
+        git 'git'
     }
 
     environment {
@@ -14,13 +14,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Yamete11/final-pro-innowise.git'
+                git branch: 'main', url: 'https://github.com/Yamete11/final-pro-innowise.git'
             }
         }
 
         stage('Build & Run Tests') {
             steps {
-                sh './gradlew clean test'
+                bat './gradlew clean test'
             }
         }
 
